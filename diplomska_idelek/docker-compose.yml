@@ -2,32 +2,28 @@ version: '3.9'
 
 services:
   postgres:
-    image: postgres:14-alpine
+    image: 'postgres:13.2-alpine'
     ports:
-      - 5432:5432
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=S3cret
-      - POSTGRES_USER=citizix_user
-      - POSTGRES_DB=citizix_db
 
-  oracle-db:
-    image: container-registry.oracle.com/database/enterprise:latest
-    environment:
-      - ORACLE_SID=ORCLCDB
-      - ORACLE_PDB=ORCLPDB1
-      - ORACLE_PWD=Oracle_123
+  # 1. connect / sys as sysdba
+  # 2. password: oracle
+  #  create user gregor identified by gregor;
+  #  grant connect to gregor;
+  #  grant all privileges to gregor;
+  oracle:
+    image: wnameless/oracle-xe-11g-r2
     ports:
-      - 1521:1521
+      - 49161:1521
     volumes:
-      - oracle-data:/opt/oracle/oradata
-      - oracle-backup:/opt/oracle/backup
-    healthcheck:
-      test: [ "CMD", "sqlplus", "-L", "sys/Oracle_123@//localhost:1521/ORCLCDB as sysdba", "@healthcheck.sql" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - .:/duo
+    environment:
+      - ORACLE_ALLOW_REMOTE=true
 
 volumes:
   oracle-data:
