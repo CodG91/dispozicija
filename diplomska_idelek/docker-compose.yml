@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: 'postgres:13.2-alpine'
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+
+  # 1. connect / sys as sysdba
+  # 2. password: oracle
+  #  create user gregor identified by gregor;
+  #  grant connect to gregor;
+  #  grant all privileges to gregor;
+  oracle:
+    image: wnameless/oracle-xe-11g-r2
+    ports:
+      - 49161:1521
+    volumes:
+      - .:/duo
+    environment:
+      - ORACLE_ALLOW_REMOTE=true
+
+volumes:
+  oracle-data:
+  oracle-backup:
