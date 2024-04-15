@@ -19,7 +19,7 @@ services:
   oracle:
     image: wnameless/oracle-xe-11g-r2
     ports:
-      - 49161:1521
+      - '1521:1521'
     volumes:
       - .:/duo
     environment:
