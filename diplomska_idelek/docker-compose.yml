@@ -11,22 +11,19 @@ services:
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
 
+  # docker run -d --name oracle-db -p 1521:1521 container-registry.oracle.com/database/free:latest
+
+  #-e ORACLE_SID=ORCLCDB -e ORACLE_PWD=0000 -e ORACLE_PDB=ORCLPDB1 -v /opt/oracle/oradata
+  # docker exec -it oracle-db sqlplus / as sysdba
   # 1. connect / sys as sysdba
   # 2. password: oracle
-  #  create user gregor identified by gregor;
-  #  grant connect to gregor;
-  #  grant all privileges to gregor;
+  #  create user c##gregor identified by gregor;
+  #  grant connect to c##gregor;
+  #  grant all privileges to c##gregor;
   oracle:
     image: container-registry.oracle.com/database/free:latest
     ports:
       - '1521:1521'
-    volumes:
-      - .:/duo
-    environment:
-      - ORACLE_ALLOW_REMOTE=true
-      - ORACLE_SID=ORCLCDB
-      - ORACLE_PDB=ORCLPDB1
-      - ORACLE_PWD=0000
 
 volumes:
   postgres-data:

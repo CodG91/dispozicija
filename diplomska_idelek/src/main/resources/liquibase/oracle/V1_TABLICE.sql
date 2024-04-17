@@ -1,1 +1,6 @@
-CREATE TABLE test (id NUMBER PRIMARY KEY, name VARCHAR2(255))
+--liquibase formatted sql
+--changeset c##gregor:1
+CREATE TABLE test_table (
+                            name VARCHAR(255)
+);
+/

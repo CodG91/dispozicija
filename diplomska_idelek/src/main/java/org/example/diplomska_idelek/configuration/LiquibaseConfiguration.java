@@ -11,19 +11,19 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class LiquibaseConfiguration {
 
     private static final String ORACLE_CHANGELOG = "classpath:liquibase/oracle-changelog.xml";
     private static final String POSTGRES_CHANGELOG = "classpath:liquibase/postgres-changelog.xml";
 
-    @Bean
-    public SpringLiquibase oracleLiquibase(@Qualifier("oracleDataSource") DataSource dataSource) {
-        SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog(ORACLE_CHANGELOG);
-        return liquibase;
-    }
+//    @Bean
+//    public SpringLiquibase oracleLiquibase(@Qualifier("oracleDataSource") DataSource dataSource) {
+//        SpringLiquibase liquibase = new SpringLiquibase();
+//        liquibase.setDataSource(dataSource);
+//        liquibase.setChangeLog(ORACLE_CHANGELOG);
+//        return liquibase;
+//    }
 
     @Bean
     public SpringLiquibase postgresLiquibase(@Qualifier("postgresDataSource") DataSource dataSource) {
@@ -33,13 +33,13 @@ public class LiquibaseConfiguration {
         return liquibase;
     }
 
-    @Bean
-    public DataSourceInitializer oracleDataSourceInitializer(@Qualifier("oracleDataSource") DataSource dataSource) {
-        DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(dataSource);
-        initializer.setDatabasePopulator(databasePopulator(ORACLE_CHANGELOG));
-        return initializer;
-    }
+//    @Bean
+//    public DataSourceInitializer oracleDataSourceInitializer(@Qualifier("oracleDataSource") DataSource dataSource) {
+//        DataSourceInitializer initializer = new DataSourceInitializer();
+//        initializer.setDataSource(dataSource);
+//        initializer.setDatabasePopulator(databasePopulator(ORACLE_CHANGELOG));
+//        return initializer;
+//    }
 
     @Bean
     public DataSourceInitializer postgresDataSourceInitializer(@Qualifier("postgresDataSource") DataSource dataSource) {
