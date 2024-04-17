@@ -25,13 +25,13 @@ public class LiquibaseConfiguration {
 //        return liquibase;
 //    }
 
-    @Bean
-    public SpringLiquibase postgresLiquibase(@Qualifier("postgresDataSource") DataSource dataSource) {
-        SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog(POSTGRES_CHANGELOG);
-        return liquibase;
-    }
+//    @Bean
+//    public SpringLiquibase postgresLiquibase(@Qualifier("postgresDataSource") DataSource dataSource) {
+//        SpringLiquibase liquibase = new SpringLiquibase();
+//        liquibase.setDataSource(dataSource);
+//        liquibase.setChangeLog(POSTGRES_CHANGELOG);
+//        return liquibase;
+//    }
 
 //    @Bean
 //    public DataSourceInitializer oracleDataSourceInitializer(@Qualifier("oracleDataSource") DataSource dataSource) {
@@ -41,26 +41,26 @@ public class LiquibaseConfiguration {
 //        return initializer;
 //    }
 
-    @Bean
-    public DataSourceInitializer postgresDataSourceInitializer(@Qualifier("postgresDataSource") DataSource dataSource) {
-        DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(dataSource);
-        initializer.setDatabasePopulator(databasePopulator(POSTGRES_CHANGELOG));
-        return initializer;
-    }
+//    @Bean
+//    public DataSourceInitializer postgresDataSourceInitializer(@Qualifier("postgresDataSource") DataSource dataSource) {
+//        DataSourceInitializer initializer = new DataSourceInitializer();
+//        initializer.setDataSource(dataSource);
+//        initializer.setDatabasePopulator(databasePopulator(POSTGRES_CHANGELOG));
+//        return initializer;
+//    }
 
-    private ResourceDatabasePopulator databasePopulator(String changelogPath) {
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        Resource[] resources = loadResources(changelogPath);
-        populator.addScripts(resources);
-        return populator;
-    }
-
-    private Resource[] loadResources(String path) {
-        try {
-            return new PathMatchingResourcePatternResolver().getResources(path);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load resources", e);
-        }
-    }
+//    private ResourceDatabasePopulator databasePopulator(String changelogPath) {
+//        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+//        Resource[] resources = loadResources(changelogPath);
+//        populator.addScripts(resources);
+//        return populator;
+//    }
+//
+//    private Resource[] loadResources(String path) {
+//        try {
+//            return new PathMatchingResourcePatternResolver().getResources(path);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Failed to load resources", e);
+//        }
+//    }
 }
