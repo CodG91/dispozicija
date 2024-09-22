@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NumberVehiclesMakeModelYear implements RowMapper<ElectricVehicleGeneric> {
+public class NumberVehiclesMakeModelYearMapper implements RowMapper<ElectricVehicleGeneric> {
     @Override
     public ElectricVehicleGeneric mapRow(ResultSet rs, int rowNum) throws SQLException {
         ElectricVehicleGeneric ev = new ElectricVehicleGeneric();

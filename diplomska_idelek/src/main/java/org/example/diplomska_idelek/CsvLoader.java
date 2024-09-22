@@ -254,7 +254,7 @@ public class CsvLoader {
         StopWatch postgresStopWatch = initStopWatch();
         postgresStopWatch.start();
         log.info("Number of vehicles per company, per model, per model year statement started on {} database!", POSTGRES);
-        List<ElectricVehicleGeneric> postgreData = postgresJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new NumberVehiclesMakeModelYear());
+        List<ElectricVehicleGeneric> postgreData = postgresJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new NumberVehiclesMakeModelYearMapper());
 
         postgresStopWatch.stop();
         log.info("Number of vehicles per company, per model, per model year statement is finished for {} database with row size of {} and it took " +
@@ -263,7 +263,7 @@ public class CsvLoader {
         StopWatch oracleStopWatch = initStopWatch();
         oracleStopWatch.start();
         log.info("RNumber of vehicles per company, per model, per model year statement started on {} database!", ORACLE);
-        List<ElectricVehicleGeneric> oracleData = oracleJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new NumberVehiclesMakeModelYear());
+        List<ElectricVehicleGeneric> oracleData = oracleJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new NumberVehiclesMakeModelYearMapper());
         oracleStopWatch.stop();
         log.info("Number of vehicles per company, per model, per model year statement is finished for {} database with row size of {} and it took" +
                 " {} miliseconds!", ORACLE, oracleData.size(), oracleStopWatch.getTotalTimeMillis());
