@@ -38,9 +38,10 @@ public class CsvLoader {
     }
 
     @PostConstruct
-    public void loadCsv() throws IOException {
+    public void loadCsv() throws IOException, InterruptedException {
 
-        loadData();
+        loadOracleData();
+        loadPostgresData();
         measureSelectAllStatement();
         measureGroupBy();
         numElectricVehiclesByModel();
@@ -52,19 +53,72 @@ public class CsvLoader {
 
     }
 
-    private void loadData() throws IOException {
+
+    private void loadOracleData() throws IOException, InterruptedException {
 
         if (!isElectricCarDataAvailable()) {
 
             StopWatch loadStopWatch = new StopWatch();
             loadStopWatch.start();
-            log.info("Load started");
+            log.info("Load to Oracle started");
             Resource resource = new ClassPathResource("csv/Electric_Vehicle_Population_Data.csv");
             InputStream inputStream = resource.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            int i = 0;
+            while ((line = reader.readLine()) != null && i < 149000) {
+                i++;
+                String[] values = line.split(",");
+                String vin = values[0];
+                String county = values[1];
+                String city = values[2];
+                String state = values[3];
+                String postalCode = values[4];
+                String modelYear = values[5];
+                String make = values[6];
+                String model = values[7];
+                String electricVehicleType = values[8];
+                String cafvEligibility = values[9];
+                String electricRange = values[10];
+                String baseMsrp = values[11];
+                String legislativeDistrict = values[12];
+                String dolVehicleId = values[13];
+                String vehicleLocation = values[14];
+                String electricUtility = values[15];
+                String censusTract2020 = values[16];
+
+                oracleJdbcTemplate.update(Queries.INSERT_STATEMENT,
+                        vin, county, city, state, postalCode, modelYear, make, model, electricVehicleType,
+                        cafvEligibility, electricRange, baseMsrp, legislativeDistrict, dolVehicleId,
+                        vehicleLocation, electricUtility, censusTract2020);
+                Thread.sleep(20);
+            }
+            loadStopWatch.stop();
+            log.info("Load to oracle is finished in {} seconds", loadStopWatch.getTotalTimeSeconds());
+            reader.close();
+            inputStream.close();
+        } else {
+            log.info("Data already exists in table. I will not load!");
+        }
+
+    }
+
+    private void loadPostgresData() throws IOException, InterruptedException {
+
+        if (!isElectricCarDataAvailable()) {
+
+            StopWatch loadStopWatch = new StopWatch();
+            loadStopWatch.start();
+            log.info("Load to Postgres started");
+            Resource resource = new ClassPathResource("csv/Electric_Vehicle_Population_Data.csv");
+            InputStream inputStream = resource.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            int i = 0;
+            while ((line = reader.readLine()) != null && i < 149000) {
+                i++;
                 String[] values = line.split(",");
                 String vin = values[0];
                 String county = values[1];
@@ -88,14 +142,10 @@ public class CsvLoader {
                         vin, county, city, state, postalCode, modelYear, make, model, electricVehicleType,
                         cafvEligibility, electricRange, baseMsrp, legislativeDistrict, dolVehicleId,
                         vehicleLocation, electricUtility, censusTract2020);
-
-                oracleJdbcTemplate.update(Queries.INSERT_STATEMENT,
-                        vin, county, city, state, postalCode, modelYear, make, model, electricVehicleType,
-                        cafvEligibility, electricRange, baseMsrp, legislativeDistrict, dolVehicleId,
-                        vehicleLocation, electricUtility, censusTract2020);
+                Thread.sleep(20);
             }
             loadStopWatch.stop();
-            log.info("Load is finished in {} seconds", loadStopWatch.getTotalTimeSeconds());
+            log.info("Load to postgres is finished in {} seconds", loadStopWatch.getTotalTimeSeconds());
             reader.close();
             inputStream.close();
         } else {
@@ -181,17 +231,21 @@ public class CsvLoader {
         StopWatch postgresStopWatch = initStopWatch();
         postgresStopWatch.start();
         log.info("Electric Utility Provider statement started on {} database!", POSTGRES);
-        List<ElectricVehicleGeneric> postgreData = postgresJdbcTemplate.query(Queries.ELECTRIC_UTILITY_PROVIDER, new ElectricUtilityProviderMapper());
+        List<ElectricVehicleGeneric> postgreData = postgresJdbcTemplate.query(Queries.ELECTRIC_UTILITY_PROVIDER,
+                new ElectricUtilityProviderMapper());
 
         postgresStopWatch.stop();
-        log.info("Electric Utility Provider statement is finished for {} database with row size of {} and it took {} miliseconds!", POSTGRES, postgreData.size(), postgresStopWatch.getTotalTimeMillis());
+        log.info("Electric Utility Provider statement is finished for {} database with row size of {} and it took {} miliseconds!",
+                POSTGRES, postgreData.size(), postgresStopWatch.getTotalTimeMillis());
 
         StopWatch oracleStopWatch = initStopWatch();
         oracleStopWatch.start();
         log.info("Electric Utility Provider statement started on {} database!", ORACLE);
-        List<ElectricVehicleGeneric> oracleData = oracleJdbcTemplate.query(Queries.ELECTRIC_UTILITY_PROVIDER, new ElectricUtilityProviderMapper());
+        List<ElectricVehicleGeneric> oracleData = oracleJdbcTemplate.query(Queries.ELECTRIC_UTILITY_PROVIDER,
+                new ElectricUtilityProviderMapper());
         oracleStopWatch.stop();
-        log.info("Electric Utility Provider vehicles by state statement is finished for {} database with row size of {} and it took {} miliseconds!", ORACLE, oracleData.size(), oracleStopWatch.getTotalTimeMillis());
+        log.info("Electric Utility Provider vehicles by state statement is finished for {} database with row size of {} and it took {} miliseconds!",
+                ORACLE, oracleData.size(), oracleStopWatch.getTotalTimeMillis());
     }
 
 
@@ -200,17 +254,19 @@ public class CsvLoader {
         StopWatch postgresStopWatch = initStopWatch();
         postgresStopWatch.start();
         log.info("Number of vehicles per company, per model, per model year statement started on {} database!", POSTGRES);
-        List<ElectricVehicleGeneric> postgreData = postgresJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new RangeByModelMapper());
+        List<ElectricVehicleGeneric> postgreData = postgresJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new NumberVehiclesMakeModelYear());
 
         postgresStopWatch.stop();
-        log.info("Number of vehicles per company, per model, per model year statement is finished for {} database with row size of {} and it took {} miliseconds!", POSTGRES, postgreData.size(), postgresStopWatch.getTotalTimeMillis());
+        log.info("Number of vehicles per company, per model, per model year statement is finished for {} database with row size of {} and it took " +
+                "{} miliseconds!", POSTGRES, postgreData.size(), postgresStopWatch.getTotalTimeMillis());
 
         StopWatch oracleStopWatch = initStopWatch();
         oracleStopWatch.start();
         log.info("RNumber of vehicles per company, per model, per model year statement started on {} database!", ORACLE);
-        List<ElectricVehicleGeneric> oracleData = oracleJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new RangeByModelMapper());
+        List<ElectricVehicleGeneric> oracleData = oracleJdbcTemplate.query(Queries.YEAR_MODEL_MAKE, new NumberVehiclesMakeModelYear());
         oracleStopWatch.stop();
-        log.info("Number of vehicles per company, per model, per model year statement is finished for {} database with row size of {} and it took {} miliseconds!", ORACLE, oracleData.size(), oracleStopWatch.getTotalTimeMillis());
+        log.info("Number of vehicles per company, per model, per model year statement is finished for {} database with row size of {} and it took" +
+                " {} miliseconds!", ORACLE, oracleData.size(), oracleStopWatch.getTotalTimeMillis());
     }
 
     private void teslaModelCityNum() {
@@ -256,5 +312,5 @@ public class CsvLoader {
 
     private StopWatch initStopWatch(){
         return new StopWatch();
-    }
+}
 }

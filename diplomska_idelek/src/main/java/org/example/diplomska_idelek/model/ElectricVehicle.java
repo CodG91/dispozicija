@@ -163,11 +163,23 @@ public class ElectricVehicle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ElectricVehicle that = (ElectricVehicle) o;
-        return Objects.equals(vin, that.vin) && Objects.equals(county, that.county) && Objects.equals(city, that.city) && Objects.equals(state, that.state) && Objects.equals(postalCode, that.postalCode) && Objects.equals(modelYear, that.modelYear) && Objects.equals(make, that.make) && Objects.equals(model, that.model) && Objects.equals(electricVehicleType, that.electricVehicleType) && Objects.equals(cafvEligibility, that.cafvEligibility) && Objects.equals(electricRange, that.electricRange) && Objects.equals(baseMsrp, that.baseMsrp) && Objects.equals(legislativeDistrict, that.legislativeDistrict) && Objects.equals(dolVehicleId, that.dolVehicleId) && Objects.equals(vehicleLocation, that.vehicleLocation) && Objects.equals(electricUtility, that.electricUtility) && Objects.equals(censusTract2020, that.censusTract2020);
+        return Objects.equals(vin, that.vin) && Objects.equals(county, that.county) &&
+                Objects.equals(city, that.city) && Objects.equals(state, that.state) &&
+                Objects.equals(postalCode, that.postalCode) && Objects.equals(modelYear, that.modelYear)
+                && Objects.equals(make, that.make) && Objects.equals(model, that.model) &&
+                Objects.equals(electricVehicleType, that.electricVehicleType) &&
+                Objects.equals(cafvEligibility, that.cafvEligibility) && Objects.equals(electricRange,
+                that.electricRange) && Objects.equals(baseMsrp, that.baseMsrp)
+                && Objects.equals(legislativeDistrict, that.legislativeDistrict) &&
+                Objects.equals(dolVehicleId, that.dolVehicleId) && Objects.equals(vehicleLocation,
+                that.vehicleLocation) && Objects.equals(electricUtility,
+                that.electricUtility) && Objects.equals(censusTract2020, that.censusTract2020);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(vin, county, city, state, postalCode, modelYear, make, model, electricVehicleType, cafvEligibility, electricRange, baseMsrp, legislativeDistrict, dolVehicleId, vehicleLocation, electricUtility, censusTract2020);
+        return Objects.hash(vin, county, city, state, postalCode, modelYear, make, model,
+                electricVehicleType, cafvEligibility, electricRange, baseMsrp, legislativeDistrict,
+                dolVehicleId, vehicleLocation, electricUtility, censusTract2020);
     }
 }

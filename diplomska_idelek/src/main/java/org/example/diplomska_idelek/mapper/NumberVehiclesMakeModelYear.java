@@ -12,7 +12,7 @@ public class NumberVehiclesMakeModelYear implements RowMapper<ElectricVehicleGen
         ElectricVehicleGeneric ev = new ElectricVehicleGeneric();
         ev.setField1(rs.getString("make"));
         ev.setField2(rs.getString("model"));
-        ev.setField3(rs.getString("max_electric_range"));
+        ev.setField3(rs.getString("model_year"));
         return ev;
     }
 }
